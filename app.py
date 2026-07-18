@@ -15,72 +15,22 @@ st.set_page_config(
 # ---------------------------
 st.markdown("""
 <style>
-
-/* Main App */
-.stApp{
-    background: #F8F9FA;
+.stApp {
+    background-color: white !important;
 }
 
-/* Title */
-.main-title{
-    text-align: center;
-    color: #2563EB;
-    font-size: 42px;
-    font-weight: 700;
+html, body, [class*="css"], [data-testid="stAppViewContainer"] {
+    color: black !important;
 }
 
-/* Subtitle */
-.subtitle{
-    text-align: center;
-    color: #6B7280;
-    font-size: 18px;
-    margin-bottom: 25px;
+[data-testid="stChatInput"] textarea {
+    color: black !important;
+    background: white !important;
 }
 
-/* Chat Messages */
-div[data-testid="stChatMessage"]{
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 16px;
-    padding: 12px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+[data-testid="stMarkdownContainer"] {
+    color: black !important;
 }
-
-/* Chat Input */
-.stChatInputContainer{
-    background: white;
-    border-top: 1px solid #E5E7EB;
-}
-
-/* Buttons */
-.stButton>button{
-    background-color: #2563EB;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 18px;
-    font-weight: 600;
-}
-
-.stButton>button:hover{
-    background-color: #1D4ED8;
-    color: white;
-}
-
-/* Hide Streamlit Branding */
-footer{
-    visibility: hidden;
-}
-
-header{
-    visibility: hidden;
-}
-
-#MainMenu{
-    visibility: hidden;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
