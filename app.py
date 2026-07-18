@@ -5,7 +5,7 @@ from groq import Groq
 # Page Config
 # ---------------------------
 st.set_page_config(
-    page_title="AI Chatbot",
+    page_title="Pooji conversational chatbot",
     page_icon="🤖",
     layout="centered"
 )
@@ -103,7 +103,7 @@ if "messages" not in st.session_state:
 # ---------------------------
 # Header
 # ---------------------------
-st.markdown("<h1 class='main-title'>🤖 AI Chatbot</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='main-title'>🤖 Pooji conversational chatbot</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtitle'>Powered by Groq GPT-OSS-120B</p>", unsafe_allow_html=True)
 
 # ---------------------------
