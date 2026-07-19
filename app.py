@@ -399,9 +399,18 @@ if "messages" not in st.session_state:
 # ---------------------------
 # Header
 # ---------------------------
-st.markdown("<h1 class='main-title'>🤖 Pooji conversational chatbot</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subtitle'>Powered by Groq GPT-OSS-120B</p>", unsafe_allow_html=True)
+st.markdown("""
+<div class="header-box">
+    <div class="robot">🤖</div>
 
+    <div class="title-area">
+        <h1 class="main-title">Pooji Conversational Chatbot</h1>
+        <p class="subtitle">
+            Powered by <span>Groq GPT-OSS-120B</span>
+        </p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 # ---------------------------
 # Clear Chat Button
 # ---------------------------
