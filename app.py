@@ -15,22 +15,218 @@ st.set_page_config(
 # ---------------------------
 st.markdown("""
 <style>
-.stApp {
-    background-color: white !important;
+
+/* ---------- Animated Background ---------- */
+
+.stApp{
+    background: linear-gradient(-45deg,#ffffff,#f5f7fa,#eef4ff,#ffffff);
+    background-size:400% 400%;
+    animation:bgAnimation 12s ease infinite;
 }
 
-html, body, [class*="css"], [data-testid="stAppViewContainer"] {
-    color: black !important;
+/* Background Animation */
+@keyframes bgAnimation{
+    0%{
+        background-position:0% 50%;
+    }
+    50%{
+        background-position:100% 50%;
+    }
+    100%{
+        background-position:0% 50%;
+    }
 }
 
-[data-testid="stChatInput"] textarea {
-    color: black !important;
-    background: white !important;
+/* ---------- Global Font ---------- */
+
+html,
+body,
+[class*="css"],
+[data-testid="stAppViewContainer"]{
+    color:black !important;
+    font-family:"Segoe UI",sans-serif;
 }
 
-[data-testid="stMarkdownContainer"] {
-    color: black !important;
+/* ---------- Title Animation ---------- */
+
+.main-title{
+    color:black;
+    text-align:center;
+    font-size:42px;
+    font-weight:700;
+    animation:slideDown 1s ease;
 }
+
+.subtitle{
+    color:#555;
+    text-align:center;
+    animation:fadeIn 2s ease;
+}
+
+@keyframes slideDown{
+    from{
+        opacity:0;
+        transform:translateY(-40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+    }
+    to{
+        opacity:1;
+    }
+}
+
+/* ---------- Chat Messages ---------- */
+
+div[data-testid="stChatMessage"]{
+
+    background:white;
+    border-radius:18px;
+    padding:15px;
+    margin:10px 0;
+
+    border:1px solid #E5E7EB;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    animation:messageAnimation .4s ease;
+
+    transition:.3s;
+}
+
+div[data-testid="stChatMessage"]:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+
+}
+
+/* Message Animation */
+
+@keyframes messageAnimation{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* ---------- Chat Input ---------- */
+
+[data-testid="stChatInput"]{
+
+    animation:fadeInUp .8s ease;
+
+}
+
+[data-testid="stChatInput"] textarea{
+
+    background:white !important;
+
+    color:black !important;
+
+    border-radius:15px !important;
+
+    border:2px solid #d1d5db !important;
+
+}
+
+[data-testid="stChatInput"] textarea:focus{
+
+    border:2px solid #4F46E5 !important;
+
+    box-shadow:0 0 10px rgba(79,70,229,.25);
+
+}
+
+/* ---------- Buttons ---------- */
+
+.stButton>button{
+
+    background:#4F46E5;
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.stButton>button:hover{
+
+    background:#4338CA;
+
+    transform:scale(1.05);
+
+}
+
+/* ---------- Fade Up ---------- */
+
+@keyframes fadeInUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ---------- Markdown ---------- */
+
+[data-testid="stMarkdownContainer"]{
+
+    color:black !important;
+
+}
+
+/* ---------- Hide Streamlit ---------- */
+
+header{
+
+    visibility:hidden;
+
+}
+
+footer{
+
+    visibility:hidden;
+
+}
+
+#MainMenu{
+
+    visibility:hidden;
+
+}
+
 </style>
 """, unsafe_allow_html=True)
 
