@@ -16,207 +16,253 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* ===========================
+/* --------------------------------------------------
    Animated Background
-=========================== */
+-------------------------------------------------- */
 
 .stApp{
-    background: linear-gradient(-45deg,#ffffff,#f8fafc,#eef6ff,#ffffff);
+    background: linear-gradient(-45deg,
+        #ffffff,
+        #f3f8ff,
+        #eef7ff,
+        #ffffff);
     background-size:400% 400%;
-    animation: gradientBG 12s ease infinite;
+    animation: gradientBG 15s ease infinite;
+    overflow:hidden;
 }
 
 @keyframes gradientBG{
-    0%{
-        background-position:0% 50%;
-    }
-    50%{
-        background-position:100% 50%;
-    }
-    100%{
-        background-position:0% 50%;
-    }
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
 
+/* --------------------------------------------------
+   Floating Glow Circles
+-------------------------------------------------- */
 
-/* ===========================
-   Black Font
-=========================== */
+.stApp::before,
+.stApp::after{
+    content:"";
+    position:fixed;
+    border-radius:50%;
+    filter:blur(80px);
+    z-index:-1;
+}
+
+.stApp::before{
+    width:280px;
+    height:280px;
+    background:#7dd3fc;
+    top:-80px;
+    left:-80px;
+    animation:float1 8s ease-in-out infinite;
+}
+
+.stApp::after{
+    width:320px;
+    height:320px;
+    background:#c4b5fd;
+    bottom:-120px;
+    right:-120px;
+    animation:float2 10s ease-in-out infinite;
+}
+
+@keyframes float1{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(50px);}
+}
+
+@keyframes float2{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-60px);}
+}
+
+/* --------------------------------------------------
+   Black Font Everywhere
+-------------------------------------------------- */
 
 html,
 body,
-[class*="css"],
-[data-testid="stAppViewContainer"],
-[data-testid="stMarkdownContainer"],
-label,
-span,
 p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6{
+span,
+label,
+h1,h2,h3,h4,h5,h6,
+[data-testid="stMarkdownContainer"]{
     color:#000 !important;
 }
 
+/* --------------------------------------------------
+   Title Animation
+-------------------------------------------------- */
 
-/* ===========================
-   Chat Messages
-=========================== */
-
-div[data-testid="stChatMessage"]{
-
-    background:white;
-
-    border-radius:18px;
-
-    padding:15px;
-
-    margin-bottom:15px;
-
-    border:1px solid #E5E7EB;
-
-    box-shadow:0px 6px 18px rgba(0,0,0,.08);
-
-    animation:slideUp .4s ease;
+.main-title{
+    text-align:center;
+    color:#000;
+    font-size:46px;
+    font-weight:700;
+    animation:fadeDown 1s ease;
 }
 
-
-@keyframes slideUp{
-
+@keyframes fadeDown{
     from{
         opacity:0;
-        transform:translateY(25px);
+        transform:translateY(-40px);
     }
-
     to{
         opacity:1;
         transform:translateY(0);
     }
-
 }
 
+/* --------------------------------------------------
+   Chat Messages
+-------------------------------------------------- */
 
-/* Hover Animation */
+div[data-testid="stChatMessage"]{
+
+    background:white;
+    border-radius:18px;
+    border:1px solid #e5e7eb;
+
+    padding:15px;
+
+    margin-bottom:14px;
+
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+
+    transition:.35s;
+}
 
 div[data-testid="stChatMessage"]:hover{
 
-    transform:translateY(-4px);
+    transform:translateY(-3px);
 
-    transition:.3s;
-
-    box-shadow:0 12px 25px rgba(0,0,0,.12);
+    box-shadow:0 12px 30px rgba(0,0,0,.15);
 
 }
 
-
-/* ===========================
+/* --------------------------------------------------
    Chat Input
-=========================== */
+-------------------------------------------------- */
 
 [data-testid="stChatInput"]{
 
-    border-radius:20px;
+    border-radius:30px;
 
-    border:2px solid #D1D5DB;
+    border:2px solid #dbeafe;
 
-    background:white;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
 
     transition:.3s;
 
 }
 
-
 [data-testid="stChatInput"]:focus-within{
 
-    border-color:#2563EB;
+    border-color:#2563eb;
 
-    box-shadow:0 0 15px rgba(37,99,235,.25);
+    box-shadow:0 0 18px rgba(37,99,235,.35);
 
 }
 
+/* Textarea */
 
 [data-testid="stChatInput"] textarea{
 
-    color:black !important;
+    color:#000 !important;
 
     background:white !important;
 
 }
 
-
-/* ===========================
-   Buttons
-=========================== */
+/* --------------------------------------------------
+   Send Button Animation
+-------------------------------------------------- */
 
 .stButton>button{
 
-    background:#2563EB;
+    background:#2563eb;
 
     color:white;
 
-    border-radius:12px;
-
     border:none;
+
+    border-radius:30px;
 
     transition:.3s;
 
-    font-weight:600;
+    font-weight:bold;
 
 }
-
 
 .stButton>button:hover{
 
-    transform:scale(1.05);
+    transform:scale(1.06);
 
-    background:#1D4ED8;
+    background:#1d4ed8;
+
+    box-shadow:0 0 18px rgba(37,99,235,.45);
 
 }
 
-
-/* ===========================
+/* --------------------------------------------------
    Scrollbar
-=========================== */
+-------------------------------------------------- */
 
 ::-webkit-scrollbar{
-
     width:8px;
-
 }
 
 ::-webkit-scrollbar-thumb{
-
-    background:#BFC5D2;
-
+    background:#60a5fa;
     border-radius:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#f3f4f6;
+}
+
+/* --------------------------------------------------
+   Fade Animation for Messages
+-------------------------------------------------- */
+
+div[data-testid="stChatMessage"]{
+
+    animation:fadeIn .45s ease;
 
 }
 
-::-webkit-scrollbar-thumb:hover{
+@keyframes fadeIn{
 
-    background:#94A3B8;
+    from{
+
+        opacity:0;
+
+        transform:translateY(18px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
 
 }
 
-
-/* ===========================
+/* --------------------------------------------------
    Hide Streamlit Branding
-=========================== */
+-------------------------------------------------- */
 
-#MainMenu{
-    visibility:hidden;
-}
-
-header{
-    visibility:hidden;
-}
-
+#MainMenu,
+header,
 footer{
+
     visibility:hidden;
+
 }
 
 </style>
