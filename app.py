@@ -16,16 +16,17 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* ---------- Animated Background ---------- */
+/* ===========================
+   Animated Background
+=========================== */
 
 .stApp{
-    background: linear-gradient(-45deg,#ffffff,#f5f7fa,#eef4ff,#ffffff);
+    background: linear-gradient(-45deg,#ffffff,#f8fafc,#eef6ff,#ffffff);
     background-size:400% 400%;
-    animation:bgAnimation 12s ease infinite;
+    animation: gradientBG 12s ease infinite;
 }
 
-/* Background Animation */
-@keyframes bgAnimation{
+@keyframes gradientBG{
     0%{
         background-position:0% 50%;
     }
@@ -37,194 +38,185 @@ st.markdown("""
     }
 }
 
-/* ---------- Global Font ---------- */
+
+/* ===========================
+   Black Font
+=========================== */
 
 html,
 body,
 [class*="css"],
-[data-testid="stAppViewContainer"]{
-    color:black !important;
-    font-family:"Segoe UI",sans-serif;
+[data-testid="stAppViewContainer"],
+[data-testid="stMarkdownContainer"],
+label,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+    color:#000 !important;
 }
 
-/* ---------- Title Animation ---------- */
 
-.main-title{
-    color:black;
-    text-align:center;
-    font-size:42px;
-    font-weight:700;
-    animation:slideDown 1s ease;
-}
-
-.subtitle{
-    color:#555;
-    text-align:center;
-    animation:fadeIn 2s ease;
-}
-
-@keyframes slideDown{
-    from{
-        opacity:0;
-        transform:translateY(-40px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-    }
-    to{
-        opacity:1;
-    }
-}
-
-/* ---------- Chat Messages ---------- */
+/* ===========================
+   Chat Messages
+=========================== */
 
 div[data-testid="stChatMessage"]{
 
     background:white;
+
     border-radius:18px;
+
     padding:15px;
-    margin:10px 0;
+
+    margin-bottom:15px;
 
     border:1px solid #E5E7EB;
 
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    box-shadow:0px 6px 18px rgba(0,0,0,.08);
 
-    animation:messageAnimation .4s ease;
-
-    transition:.3s;
+    animation:slideUp .4s ease;
 }
+
+
+@keyframes slideUp{
+
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+
+/* Hover Animation */
 
 div[data-testid="stChatMessage"]:hover{
 
-    transform:translateY(-3px);
+    transform:translateY(-4px);
 
-    box-shadow:0 12px 25px rgba(0,0,0,.15);
+    transition:.3s;
 
-}
-
-/* Message Animation */
-
-@keyframes messageAnimation{
-
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    box-shadow:0 12px 25px rgba(0,0,0,.12);
 
 }
 
-/* ---------- Chat Input ---------- */
+
+/* ===========================
+   Chat Input
+=========================== */
 
 [data-testid="stChatInput"]{
 
-    animation:fadeInUp .8s ease;
+    border-radius:20px;
 
-}
+    border:2px solid #D1D5DB;
 
-[data-testid="stChatInput"] textarea{
+    background:white;
 
-    background:white !important;
-
-    color:black !important;
-
-    border-radius:15px !important;
-
-    border:2px solid #d1d5db !important;
-
-}
-
-[data-testid="stChatInput"] textarea:focus{
-
-    border:2px solid #4F46E5 !important;
-
-    box-shadow:0 0 10px rgba(79,70,229,.25);
-
-}
-
-/* ---------- Buttons ---------- */
-
-.stButton>button{
-
-    background:#4F46E5;
-
-    color:white;
-
-    border:none;
-
-    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
 
     transition:.3s;
 
 }
 
-.stButton>button:hover{
 
-    background:#4338CA;
+[data-testid="stChatInput"]:focus-within{
 
-    transform:scale(1.05);
+    border-color:#2563EB;
 
-}
-
-/* ---------- Fade Up ---------- */
-
-@keyframes fadeInUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(25px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
+    box-shadow:0 0 15px rgba(37,99,235,.25);
 
 }
 
-/* ---------- Markdown ---------- */
 
-[data-testid="stMarkdownContainer"]{
+[data-testid="stChatInput"] textarea{
 
     color:black !important;
 
+    background:white !important;
+
 }
 
-/* ---------- Hide Streamlit ---------- */
+
+/* ===========================
+   Buttons
+=========================== */
+
+.stButton>button{
+
+    background:#2563EB;
+
+    color:white;
+
+    border-radius:12px;
+
+    border:none;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+
+.stButton>button:hover{
+
+    transform:scale(1.05);
+
+    background:#1D4ED8;
+
+}
+
+
+/* ===========================
+   Scrollbar
+=========================== */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#BFC5D2;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#94A3B8;
+
+}
+
+
+/* ===========================
+   Hide Streamlit Branding
+=========================== */
+
+#MainMenu{
+    visibility:hidden;
+}
 
 header{
-
     visibility:hidden;
-
 }
 
 footer{
-
     visibility:hidden;
-
-}
-
-#MainMenu{
-
-    visibility:hidden;
-
 }
 
 </style>
