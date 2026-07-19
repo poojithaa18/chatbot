@@ -16,252 +16,364 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* --------------------------------------------------
+/* ===========================
    Animated Background
--------------------------------------------------- */
+=========================== */
 
 .stApp{
     background: linear-gradient(-45deg,
-        #ffffff,
-        #f3f8ff,
-        #eef7ff,
-        #ffffff);
+    #ffffff,
+    #edf4ff,
+    #f8f4ff,
+    #ffffff);
     background-size:400% 400%;
-    animation: gradientBG 15s ease infinite;
+    animation:bgAnimation 12s ease infinite;
     overflow:hidden;
 }
 
-@keyframes gradientBG{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
+/* Moving Gradient */
+
+@keyframes bgAnimation{
+
+0%{
+background-position:0% 50%;
 }
 
-/* --------------------------------------------------
-   Floating Glow Circles
--------------------------------------------------- */
-
-.stApp::before,
-.stApp::after{
-    content:"";
-    position:fixed;
-    border-radius:50%;
-    filter:blur(80px);
-    z-index:-1;
+50%{
+background-position:100% 50%;
 }
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+
+/* ===========================
+Floating Neon Blobs
+=========================== */
 
 .stApp::before{
-    width:280px;
-    height:280px;
-    background:#7dd3fc;
-    top:-80px;
-    left:-80px;
-    animation:float1 8s ease-in-out infinite;
+
+content:"";
+
+position:fixed;
+
+width:320px;
+
+height:320px;
+
+background:#7c3aed;
+
+top:-120px;
+
+left:-120px;
+
+border-radius:50%;
+
+filter:blur(90px);
+
+opacity:.35;
+
+animation:blob1 9s ease-in-out infinite;
+
+z-index:-1;
+
 }
 
 .stApp::after{
-    width:320px;
-    height:320px;
-    background:#c4b5fd;
-    bottom:-120px;
-    right:-120px;
-    animation:float2 10s ease-in-out infinite;
+
+content:"";
+
+position:fixed;
+
+width:350px;
+
+height:350px;
+
+background:#0ea5e9;
+
+bottom:-120px;
+
+right:-120px;
+
+border-radius:50%;
+
+filter:blur(100px);
+
+opacity:.35;
+
+animation:blob2 10s ease-in-out infinite;
+
+z-index:-1;
+
 }
 
-@keyframes float1{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(50px);}
+@keyframes blob1{
+
+0%,100%{
+transform:translate(0,0);
 }
 
-@keyframes float2{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-60px);}
+50%{
+transform:translate(90px,70px);
 }
 
-/* --------------------------------------------------
-   Black Font Everywhere
--------------------------------------------------- */
+}
+
+@keyframes blob2{
+
+0%,100%{
+transform:translate(0,0);
+}
+
+50%{
+transform:translate(-100px,-80px);
+}
+
+}
+
+
+/* ===========================
+Black Font
+=========================== */
 
 html,
 body,
 p,
 span,
 label,
-h1,h2,h3,h4,h5,h6,
-[data-testid="stMarkdownContainer"]{
-    color:#000 !important;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+textarea{
+
+color:#000 !important;
+
 }
 
-/* --------------------------------------------------
-   Title Animation
--------------------------------------------------- */
+
+/* ===========================
+Title
+=========================== */
 
 .main-title{
-    text-align:center;
-    color:#000;
-    font-size:46px;
-    font-weight:700;
-    animation:fadeDown 1s ease;
+
+text-align:center;
+
+font-size:44px;
+
+font-weight:700;
+
+color:#111827;
+
+animation:title 1.2s ease;
+
 }
 
-@keyframes fadeDown{
-    from{
-        opacity:0;
-        transform:translateY(-40px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+@keyframes title{
+
+0%{
+
+opacity:0;
+
+transform:translateY(-40px);
+
 }
 
-/* --------------------------------------------------
-   Chat Messages
--------------------------------------------------- */
+100%{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+/* ===========================
+Chat Bubble
+=========================== */
 
 div[data-testid="stChatMessage"]{
 
-    background:white;
-    border-radius:18px;
-    border:1px solid #e5e7eb;
+background:rgba(255,255,255,.65);
 
-    padding:15px;
+backdrop-filter:blur(20px);
 
-    margin-bottom:14px;
+border-radius:24px;
 
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
+padding:18px;
 
-    transition:.35s;
+margin-bottom:15px;
+
+border:1px solid rgba(255,255,255,.7);
+
+box-shadow:
+
+0 10px 35px rgba(124,58,237,.15);
+
+transition:.4s;
+
+animation:message .5s ease;
+
 }
 
 div[data-testid="stChatMessage"]:hover{
 
-    transform:translateY(-3px);
+transform:translateY(-4px);
 
-    box-shadow:0 12px 30px rgba(0,0,0,.15);
+box-shadow:
+
+0 18px 40px rgba(14,165,233,.25);
 
 }
 
-/* --------------------------------------------------
-   Chat Input
--------------------------------------------------- */
+
+/* ===========================
+Message Animation
+=========================== */
+
+@keyframes message{
+
+0%{
+
+opacity:0;
+
+transform:translateY(25px);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+/* ===========================
+Chat Input
+=========================== */
 
 [data-testid="stChatInput"]{
 
-    border-radius:30px;
+background:white;
 
-    border:2px solid #dbeafe;
+border-radius:35px;
 
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
+border:2px solid #d8b4fe;
 
-    transition:.3s;
+box-shadow:
+
+0 10px 30px rgba(124,58,237,.18);
+
+transition:.3s;
 
 }
 
 [data-testid="stChatInput"]:focus-within{
 
-    border-color:#2563eb;
+border-color:#7c3aed;
 
-    box-shadow:0 0 18px rgba(37,99,235,.35);
+box-shadow:
+
+0 0 25px rgba(124,58,237,.45);
+
+transform:scale(1.01);
 
 }
-
-/* Textarea */
 
 [data-testid="stChatInput"] textarea{
 
-    color:#000 !important;
+color:black !important;
 
-    background:white !important;
+background:transparent !important;
+
+font-size:17px;
 
 }
 
-/* --------------------------------------------------
-   Send Button Animation
--------------------------------------------------- */
+
+/* ===========================
+Buttons
+=========================== */
 
 .stButton>button{
 
-    background:#2563eb;
+background:linear-gradient(90deg,#7c3aed,#2563eb);
 
-    color:white;
+color:white;
 
-    border:none;
+border:none;
 
-    border-radius:30px;
+border-radius:30px;
 
-    transition:.3s;
+font-weight:600;
 
-    font-weight:bold;
+padding:10px 20px;
+
+transition:.35s;
 
 }
 
 .stButton>button:hover{
 
-    transform:scale(1.06);
+transform:scale(1.08);
 
-    background:#1d4ed8;
+box-shadow:
 
-    box-shadow:0 0 18px rgba(37,99,235,.45);
+0 0 25px rgba(124,58,237,.45);
 
 }
 
-/* --------------------------------------------------
-   Scrollbar
--------------------------------------------------- */
+
+/* ===========================
+Scrollbar
+=========================== */
 
 ::-webkit-scrollbar{
-    width:8px;
+
+width:8px;
+
 }
 
 ::-webkit-scrollbar-thumb{
-    background:#60a5fa;
-    border-radius:10px;
-}
 
-::-webkit-scrollbar-track{
-    background:#f3f4f6;
-}
+background:linear-gradient(#7c3aed,#0ea5e9);
 
-/* --------------------------------------------------
-   Fade Animation for Messages
--------------------------------------------------- */
-
-div[data-testid="stChatMessage"]{
-
-    animation:fadeIn .45s ease;
+border-radius:10px;
 
 }
 
-@keyframes fadeIn{
 
-    from{
+/* ===========================
+Hide Streamlit
+=========================== */
 
-        opacity:0;
+header{
 
-        transform:translateY(18px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
+visibility:hidden;
 
 }
 
-/* --------------------------------------------------
-   Hide Streamlit Branding
--------------------------------------------------- */
-
-#MainMenu,
-header,
 footer{
 
-    visibility:hidden;
+visibility:hidden;
+
+}
+
+#MainMenu{
+
+visibility:hidden;
 
 }
 
