@@ -1,4 +1,4 @@
-import os
+import inspect
 
 import streamlit as st
 from groq import Groq
@@ -423,6 +423,46 @@ footer, header, #MainMenu {{ visibility: hidden; }}
     letter-spacing: 0.06em;
     margin-bottom: 6px;
 }}
+
+.voice-panel {{
+    background: {t["card_bg"]};
+    border: 1px solid {t["card_border"]};
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin: 8px 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    animation: fadeSlideUp 0.5s ease-out both;
+}}
+
+.voice-panel-text {{
+    color: {t["card_text"]};
+    font-size: 13px;
+    margin: 0;
+}}
+
+.voice-panel-text strong {{
+    color: {t["card_title"]};
+}}
+
+.voice-status {{
+    color: {t["chip_text"]};
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 6px;
+    min-height: 18px;
+}}
+
+.mic-recording {{
+    animation: micPulse 1.2s ease-in-out infinite;
+}}
+
+@keyframes micPulse {{
+    0%, 100% {{ box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }}
+    50%      {{ box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }}
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -440,6 +480,81 @@ footer, header, #MainMenu {{ visibility: hidden; }}
 
 
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+
+
+# ---------------------------
+# Helpers
+# ---------------------------
+_SUPPORTS_AUDIO = "accept_audio" in inspect.signature(st.chat_input).parameters
+
+
+def transcribe_audio(audio_file):
+    audio_bytes = audio_file.getvalue()
+    transcription = client.audio.transcriptions.create(
+        model="whisper-large-v3-turbo",
+        file=("recording.wav", audio_bytes, "audio/wav"),
+        language="en",
+    )
+    return transcription.text.strip()
+
+
+def extract_prompt_text(prompt):
+    if prompt is None:
+        return None, False, None
+
+    if hasattr(prompt, "text") and prompt.text and prompt.text.strip():
+        return prompt.text.strip(), False, getattr(prompt, "audio", None)
+
+    if hasattr(prompt, "audio") and prompt.audio:
+        return None, True, prompt.audio
+
+    if isinstance(prompt, str) and prompt.strip():
+        return prompt.strip(), False, None
+
+    return None, False, None
+
+
+def run_chat_turn(user_text, from_voice=False, audio_file=None):
+    display_text = user_text
+    if from_voice:
+        display_text = f"🎤 {user_text}"
+
+    st.session_state.messages.append({"role": "user", "content": user_text})
+
+    with st.chat_message("user"):
+        st.markdown(display_text)
+        if from_voice and audio_file is not None:
+            st.audio(audio_file, format="audio/wav")
+
+    with st.chat_message("assistant"):
+        placeholder = st.empty()
+        placeholder.markdown(
+            '<div class="typing-indicator"><span></span><span></span><span></span></div>',
+            unsafe_allow_html=True,
+        )
+
+        response = ""
+        first_token = True
+
+        completion = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=st.session_state.messages,
+            stream=True,
+        )
+
+        for chunk in completion:
+            if chunk.choices[0].delta.content:
+                if first_token:
+                    first_token = False
+                response += chunk.choices[0].delta.content
+                placeholder.markdown(
+                    response + '<span class="cursor-blink"></span>',
+                    unsafe_allow_html=True,
+                )
+
+        placeholder.markdown(response)
+
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
 # ---------------------------
 # Session State
@@ -462,29 +577,30 @@ with tool_left:
     theme_dark_col, theme_light_col = st.columns(2)
 
     with theme_dark_col:
-        st.markdown(
-            f'<div class="{"theme-btn-active" if st.session_state.theme == "dark" else "theme-btn"}">',
-            unsafe_allow_html=True,
-        )
-        if st.button("🌙 Dark", key="theme_dark", use_container_width=True):
-            st.session_state.theme = "dark"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+        if st.button(
+            "🌙 Dark",
+            key="theme_dark",
+            use_container_width=True,
+            type="primary" if st.session_state.theme == "dark" else "secondary",
+        ):
+            if st.session_state.theme != "dark":
+                st.session_state.theme = "dark"
+                st.rerun()
 
     with theme_light_col:
-        st.markdown(
-            f'<div class="{"theme-btn-active" if st.session_state.theme == "light" else "theme-btn"}">',
-            unsafe_allow_html=True,
-        )
-        if st.button("☀️ Light", key="theme_light", use_container_width=True):
-            st.session_state.theme = "light"
-            st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+        if st.button(
+            "☀️ Light",
+            key="theme_light",
+            use_container_width=True,
+            type="primary" if st.session_state.theme == "light" else "secondary",
+        ):
+            if st.session_state.theme != "light":
+                st.session_state.theme = "light"
+                st.rerun()
 
 with tool_right:
     st.markdown('<p class="toolbar-label">&nbsp;</p>', unsafe_allow_html=True)
-    st.markdown('<div class="clear-btn">', unsafe_allow_html=True)
-    if st.button("🗑️", key="clear_chat", use_container_width=True, help="Clear chat"):
+    if st.button("🗑️", key="clear_chat", use_container_width=True, help="Clear chat", type="secondary"):
         st.session_state.messages = [
             {
                 "role": "system",
@@ -492,7 +608,6 @@ with tool_right:
             }
         ]
         st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------
 # Header
@@ -539,59 +654,46 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # ---------------------------
+# Voice input hint
+# ---------------------------
+if _SUPPORTS_AUDIO:
+    st.markdown("""
+    <div class="voice-panel">
+        <p class="voice-panel-text">
+            <strong>🎤 Microphone enabled</strong> — tap the mic icon in the chat box below,
+            allow browser access, record your message, then send.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+else:
+    st.info("Install Streamlit 1.52+ for microphone support: `pip install -U streamlit`")
+
+# ---------------------------
 # Chat Input
 # ---------------------------
-prompt = st.chat_input("Ask me anything...")
-
-if prompt:
-
-    st.session_state.messages.append(
-        {
-            "role": "user",
-            "content": prompt
-        }
+if _SUPPORTS_AUDIO:
+    prompt = st.chat_input(
+        "Type or tap the mic to speak...",
+        accept_audio=True,
+        key="chat_input",
     )
+else:
+    prompt = st.chat_input("Ask me anything...", key="chat_input")
 
-    with st.chat_message("user"):
-        st.markdown(prompt)
+user_text, from_voice, audio_file = extract_prompt_text(prompt)
 
-    with st.chat_message("assistant"):
+if user_text:
+    run_chat_turn(user_text)
+elif from_voice and audio_file is not None:
+    with st.spinner("Transcribing your voice..."):
+        try:
+            transcribed = transcribe_audio(audio_file)
+        except Exception as exc:
+            st.error(f"Could not transcribe audio: {exc}")
+            st.stop()
 
-        placeholder = st.empty()
+    if not transcribed:
+        st.warning("No speech detected. Please try again.")
+    else:
+        run_chat_turn(transcribed, from_voice=True, audio_file=audio_file)
 
-        placeholder.markdown(
-            '<div class="typing-indicator"><span></span><span></span><span></span></div>',
-            unsafe_allow_html=True
-        )
-
-        response = ""
-        first_token = True
-
-        completion = client.chat.completions.create(
-            model="openai/gpt-oss-120b",
-            messages=st.session_state.messages,
-            stream=True
-        )
-
-        for chunk in completion:
-
-            if chunk.choices[0].delta.content:
-
-                if first_token:
-                    first_token = False
-
-                response += chunk.choices[0].delta.content
-
-                placeholder.markdown(
-                    response + '<span class="cursor-blink"></span>',
-                    unsafe_allow_html=True
-                )
-
-        placeholder.markdown(response)
-
-    st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": response
-        }
-    )
